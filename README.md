@@ -41,7 +41,7 @@
 {
   "mcpServers": {
     "script-launcher": {
-      "command": "D:\\app\\ScriptLauncher\\ScriptLauncher.exe",
+      "command": "/path/to/ScriptLauncher.exe",
       "args": ["mcp"]
     }
   }
