@@ -160,11 +160,11 @@
               <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-brand-500/40 transition cursor-pointer flex items-center justify-between group">
                 <div class="flex items-center gap-3">
                   <div class="size-9 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-mono">
-                    <i data-lucide="coffee" class="size-4"></i>
+                    <i data-lucide="rocket" class="size-4"></i>
                   </div>
                   <div>
-                    <h4 class="text-sm font-semibold text-white group-hover:text-brand-400 transition">系统防锁屏守护</h4>
-                    <p class="text-xs text-neutral-500 font-mono mt-0.5">每 3 分钟自动心跳 · 无感防休眠</p>
+                    <h4 class="text-sm font-semibold text-white group-hover:text-brand-400 transition">启动开发服务器</h4>
+                    <p class="text-xs text-neutral-500 font-mono mt-0.5">npm run dev · port 3000</p>
                   </div>
                 </div>
                 <span class="px-2 py-1 rounded text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">运行中</span>
@@ -173,11 +173,24 @@
               <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-brand-500/40 transition cursor-pointer flex items-center justify-between group">
                 <div class="flex items-center gap-3">
                   <div class="size-9 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center font-mono">
-                    <i data-lucide="globe" class="size-4"></i>
+                    <i data-lucide="database" class="size-4"></i>
                   </div>
                   <div>
-                    <h4 class="text-sm font-semibold text-white group-hover:text-brand-400 transition">Antigravity 启用代理环境</h4>
-                    <p class="text-xs text-neutral-500 font-mono mt-0.5">127.0.0.1:7897 · 非 TUN 模式</p>
+                    <h4 class="text-sm font-semibold text-white group-hover:text-brand-400 transition">备份生产数据库</h4>
+                    <p class="text-xs text-neutral-500 font-mono mt-0.5">pg_dump · daily-backup.sql</p>
+                  </div>
+                </div>
+                <span class="px-2 py-1 rounded text-[11px] font-mono bg-white/5 text-neutral-400">空闲</span>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-brand-500/40 transition cursor-pointer flex items-center justify-between group">
+                <div class="flex items-center gap-3">
+                  <div class="size-9 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center font-mono">
+                    <i data-lucide="upload-cloud" class="size-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-semibold text-white group-hover:text-brand-400 transition">部署到生产环境</h4>
+                    <p class="text-xs text-neutral-500 font-mono mt-0.5">docker compose up -d</p>
                   </div>
                 </div>
                 <span class="px-2 py-1 rounded text-[11px] font-mono bg-white/5 text-neutral-400">空闲</span>
@@ -196,12 +209,20 @@
             </div>
 
             <div class="space-y-2 bg-[#0d0e11] p-3.5 rounded-xl border border-white/5 overflow-x-auto text-[11.5px] leading-relaxed">
-              <p class="text-neutral-500">// AI 自动调用 MCP execute_script</p>
-              <p><span class="text-purple-400">call_tool</span>("script-launcher", "execute_script", { id: 5 })</p>
+              <p class="text-neutral-500">// AI 自动列出所有可执行脚本</p>
+              <p><span class="text-purple-400">call_tool</span>("script-launcher", "<span class="text-amber-300">list_scripts</span>")</p>
+              <div class="pt-2 text-neutral-400 border-t border-white/5 mt-2">
+                <span class="text-emerald-400">✔</span> groups: [{ name: "开发" }, { name: "部署" }]<br />
+                <span class="text-blue-400">✔</span> entries: [{ id: 1, name: "启动开发服务器" }, ...]
+              </div>
+              <div class="pt-2 border-t border-white/5 mt-2">
+                <p class="text-neutral-500">// AI 直接执行指定脚本</p>
+                <p><span class="text-purple-400">call_tool</span>("script-launcher", "<span class="text-amber-300">execute_script</span>", { id: 1 })</p>
+              </div>
               <div class="pt-2 text-neutral-400 border-t border-white/5 mt-2">
                 <span class="text-emerald-400">✔ status:</span> "success"<br />
-                <span class="text-blue-400">➔ output:</span> "第 1 次防锁屏心跳已触发..."<br />
-                <span class="text-neutral-500">⏱ durationMs:</span> 18ms
+                <span class="text-blue-400">➔ output:</span> "Server running on http://localhost:3000"<br />
+                <span class="text-neutral-500">⏱ durationMs:</span> 342ms
               </div>
             </div>
           </div>
@@ -370,19 +391,47 @@
     const configs = {
       antigravity: {
         tip: "配置文件：~/.gemini/config/mcp_config.json",
-        code: `{\n  "mcpServers": {\n    "script-launcher": {\n      "command": "D:\\\\app\\\\ScriptLauncher\\\\ScriptLauncher.exe",\n      "args": ["mcp"]\n    }\n  }\n}`
+        code: `{
+  "mcpServers": {
+    "script-launcher": {
+      "command": "/path/to/ScriptLauncher.exe",
+      "args": ["mcp"]
+    }
+  }
+}`
       },
       claude: {
-        tip: "配置文件：%APPDATA%\\\\Claude\\\\claude_desktop_config.json",
-        code: `{\n  "mcpServers": {\n    "script-launcher": {\n      "command": "D:\\\\app\\\\ScriptLauncher\\\\ScriptLauncher.exe",\n      "args": ["mcp"]\n    }\n  }\n}`
+        tip: "配置文件：%APPDATA%\\Claude\\claude_desktop_config.json",
+        code: `{
+  "mcpServers": {
+    "script-launcher": {
+      "command": "C:\\\\Program Files\\\\ScriptLauncher\\\\ScriptLauncher.exe",
+      "args": ["mcp"]
+    }
+  }
+}`
       },
       cursor: {
-        tip: "配置文件：项目级 .cursor/mcp.json 或全局 MCP 设置",
-        code: `{\n  "mcpServers": {\n    "script-launcher": {\n      "command": "D:\\\\app\\\\ScriptLauncher\\\\ScriptLauncher.exe",\n      "args": ["mcp"]\n    }\n  }\n}`
+        tip: "配置文件：项目级 .cursor/mcp.json 或全局 ~/.cursor/mcp.json",
+        code: `{
+  "mcpServers": {
+    "script-launcher": {
+      "command": "C:\\\\Program Files\\\\ScriptLauncher\\\\ScriptLauncher.exe",
+      "args": ["mcp"]
+    }
+  }
+}`
       },
       qwen: {
-        tip: "千问办公：设置 → 连接器 → 自定义 MCP → 添加",
-        code: `{\n  "mcpServers": {\n    "script-launcher": {\n      "command": "D:\\\\app\\\\ScriptLauncher\\\\ScriptLauncher.exe",\n      "args": ["mcp"]\n    }\n  }\n}`
+        tip: "通义灵码 / 千问办公：设置 → MCP 服务器 → 添加",
+        code: `{
+  "mcpServers": {
+    "script-launcher": {
+      "command": "C:\\\\Program Files\\\\ScriptLauncher\\\\ScriptLauncher.exe",
+      "args": ["mcp"]
+    }
+  }
+}`
       }
     };
 
