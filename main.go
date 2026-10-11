@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"log"
+	"os"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
@@ -16,6 +17,15 @@ func init() {
 }
 
 func main() {
+	// 双模式： `scriptlauncher mcp` 以 stdio 启动 MCP 服务器（供 AI 调用），
+	// 否则正常启动桌面 GUI。两种模式复用同一套 LauncherService 与 SQLite 库。
+	if len(os.Args) > 1 && os.Args[1] == "mcp" {
+		if err := runMCPServer(); err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
+
 	service, err := NewLauncherService()
 	if err != nil {
 		log.Fatal(err)
@@ -47,7 +57,7 @@ func main() {
 			InvisibleTitleBarHeight: 50,
 			TitleBar:                application.MacTitleBarHiddenInset,
 		},
-		BackgroundColour: application.NewRGB(246, 247, 249),
+		BackgroundColour: application.NewRGB(255, 255, 255),
 		URL:              "/",
 	})
 	service.notifications = newExecutionNotifications(app, window)

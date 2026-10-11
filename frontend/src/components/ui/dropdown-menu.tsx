@@ -15,7 +15,7 @@ export function DropdownMenuContent({
         sideOffset={6}
         align="end"
         className={cn(
-          'z-50 min-w-40 rounded-xl border border-slate-200/80 bg-white p-1.5 text-sm text-slate-800 shadow-xl outline-none data-[state=open]:animate-menu-in dark:border-slate-700 dark:bg-[#182235] dark:text-slate-200',
+          'z-50 min-w-40 rounded-lg border border-[#ebebeb] bg-white p-1.5 text-sm text-[#404040] shadow-[0_12px_40px_rgba(0,0,0,.12)] outline-none data-[state=open]:animate-menu-in dark:border-[#262626] dark:bg-[#161616] dark:text-neutral-200',
           className,
         )}
         {...props}
@@ -33,8 +33,8 @@ export function DropdownMenuItem({
   return (
     <DropdownPrimitive.Item
       className={cn(
-        'flex h-9 cursor-default select-none items-center gap-2 rounded-lg px-2.5 outline-none data-[highlighted]:bg-slate-100 dark:data-[highlighted]:bg-slate-700/80',
-        danger && 'text-red-600 data-[highlighted]:bg-red-50 dark:text-red-400 dark:data-[highlighted]:bg-red-500/10',
+        'flex h-9 cursor-default select-none items-center gap-2 rounded-md px-2.5 outline-none data-[highlighted]:bg-[#f5f5f5] dark:data-[highlighted]:bg-[#232323]',
+        danger && 'text-[#dc2626] data-[highlighted]:bg-[#fef2f2] dark:text-red-400 dark:data-[highlighted]:bg-[#2a1616]',
         className,
       )}
       {...props}
@@ -45,9 +45,9 @@ export function DropdownMenuItem({
 }
 
 export function DropdownMenuLabel({ children }: { children: ReactNode }) {
-  return <DropdownPrimitive.Label className="px-2.5 py-1.5 text-xs font-medium text-slate-400 dark:text-slate-500">{children}</DropdownPrimitive.Label>
+  return <DropdownPrimitive.Label className="px-2.5 py-1.5 text-xs font-medium text-neutral-400 dark:text-neutral-500">{children}</DropdownPrimitive.Label>
 }
 
 export function DropdownMenuSeparator() {
-  return <DropdownPrimitive.Separator className="my-1 h-px bg-slate-100 dark:bg-slate-700" />
+  return <DropdownPrimitive.Separator className="my-1 h-px bg-[#f0f0f0] dark:bg-[#262626]" />
 }

@@ -22,13 +22,13 @@ export function ThemeToggle() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="flex h-10 w-full items-center gap-2 rounded-xl px-3 text-sm text-slate-600 transition hover:bg-white/50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/[.06] dark:hover:text-white"
+          className="flex h-10 w-full items-center gap-2 rounded-lg px-3 text-sm text-neutral-500 transition hover:bg-[#f0f0f0] hover:text-[#171717] dark:text-neutral-400 dark:hover:bg-[#1e1e1e] dark:hover:text-white"
           aria-label={`外观：${selected.label}`}
         >
           <SelectedIcon className="size-4" />
           <span>外观</span>
-          <span className="ml-auto text-xs text-slate-400 dark:text-slate-500">{selected.label}</span>
-          <ChevronUp className="size-3.5 text-slate-400 dark:text-slate-600" />
+          <span className="ml-auto text-xs text-neutral-400 dark:text-neutral-500">{selected.label}</span>
+          <ChevronUp className="size-3.5 text-neutral-400 dark:text-neutral-600" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="top" align="start" className="w-[218px]">
@@ -39,7 +39,7 @@ export function ThemeToggle() {
             <DropdownMenuItem key={option.value} onSelect={() => setPreference(option.value)}>
               <Icon className="size-4" />
               <span>{option.label}</span>
-              {active && <Check className="ml-auto size-4 text-sky-600 dark:text-sky-400" />}
+              {active && <Check className="ml-auto size-4 text-[#5e6ad2] dark:text-[#8b93e8]" />}
             </DropdownMenuItem>
           )
         })}

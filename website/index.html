@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScriptLauncher AI — 人机共用的 AI-Native 桌面脚本启动器</title>
+  <meta name="description" content="基于 Model Context Protocol (MCP) 与 Linear 级极简设计语言的本地桌面脚本调度中枢。支持人手点击，更支持 AI 智能体自主调用。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f4f5fc',
+              100: '#eef0fb',
+              400: '#8b93e8',
+              500: '#5e6ad2',
+              600: '#4d55b8',
+              700: '#3c4193',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0b0c0e;
+      color: #f3f4f6;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+    .glow-bg {
+      background: radial-gradient(circle at 50% -20%, rgba(94, 106, 210, 0.25), transparent 70%);
+    }
+    .card-border {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(18, 19, 22, 0.7);
+      backdrop-filter: blur(16px);
+    }
+    .card-border:hover {
+      border-color: rgba(94, 106, 210, 0.4);
+      box-shadow: 0 8px 32px -4px rgba(94, 106, 210, 0.15);
+    }
+    .grid-pattern {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="min-h-screen selection:bg-brand-500 selection:text-white relative overflow-x-hidden">
+
+  <!-- 背景辉光与网格 -->
+  <div class="fixed inset-0 pointer-events-none z-0 glow-bg"></div>
+  <div class="fixed inset-0 pointer-events-none z-0 grid-pattern opacity-60"></div>
+
+  <!-- 顶部导航 -->
+  <header class="sticky top-0 z-50 border-b border-white/5 bg-[#0b0c0e]/80 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="size-8 rounded-lg bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
+          <i data-lucide="terminal" class="size-4.5 text-white"></i>
+        </div>
+        <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-neutral-200 to-neutral-400 bg-clip-text text-transparent">ScriptLauncher AI</span>
+        <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/20">v0.0.3</span>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-400">
+        <a href="#features" class="hover:text-white transition">特性</a>
+        <a href="#mcp" class="hover:text-white transition">MCP 接入</a>
+        <a href="#download" class="hover:text-white transition">下载</a>
+        <a href="https://github.com/1264585648/ScriptLauncher-AI" target="_blank" class="hover:text-white transition flex items-center gap-1.5">
+          GitHub
+          <i data-lucide="external-link" class="size-3.5"></i>
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="#download" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold bg-white text-black hover:bg-neutral-200 transition shadow-sm">
+          <i data-lucide="download" class="size-3.5"></i>
+          <span>下载客户端</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero 模块 -->
+  <section class="relative z-10 pt-20 pb-16 md:pt-28 md:pb-24 text-center px-6">
+    <div class="max-w-4xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full card-border text-xs font-medium text-neutral-300 mb-8 shadow-inner animate-pulse">
+        <span class="size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
+        <span>首款支持 Model Context Protocol (MCP) 的人机双模脚本启动器</span>
+      </div>
+
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-6 leading-[1.15]">
+        把终端里散落的脚本<br />
+        变成 <span class="bg-gradient-to-r from-brand-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">一次点击</span> 与 <span class="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">AI 自动化中枢</span>
+      </h1>
+
+      <p class="text-base md:text-lg text-neutral-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+        拥有 <strong>Linear / Vercel 级清爽美学</strong>的桌面脚本管理器。既可人手图形化调度，又能以 <strong>MCP 原生服务</strong> 无缝接入 Claude Desktop、Cursor、Antigravity，让 AI 随时掌控本地运维与自动化。
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="#download" class="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-sm font-semibold bg-white text-black hover:bg-neutral-200 transition shadow-xl shadow-white/5 group">
+          <i data-lucide="download" class="size-4 group-hover:-translate-y-0.5 transition-transform"></i>
+          <span>免费下载 Windows 版</span>
+          <span class="text-xs text-neutral-400 font-mono font-normal">v0.0.3 (64-bit)</span>
+        </a>
+        <a href="https://github.com/1264585648/ScriptLauncher-AI" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold card-border hover:bg-white/5 transition">
+          <i data-lucide="github" class="size-4"></i>
+          <span>GitHub 仓库</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 交互预览视窗模拟 (Hero Graphic) -->
+    <div class="max-w-5xl mx-auto mt-16 rounded-2xl card-border p-2 sm:p-3 shadow-2xl relative">
+      <div class="rounded-xl overflow-hidden bg-[#121316] border border-white/5 text-left">
+        <!-- 窗口标题栏 -->
+        <div class="h-10 px-4 bg-[#18191d] border-b border-white/5 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="size-3 rounded-full bg-[#ff5f56]/80"></span>
+            <span class="size-3 rounded-full bg-[#ffbd2e]/80"></span>
+            <span class="size-3 rounded-full bg-[#27c93f]/80"></span>
+            <span class="ml-3 text-xs font-mono text-neutral-400">Script Launcher — 双模交互架构</span>
+          </div>
+          <span class="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
+            <span class="size-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+            MCP Active : stdio
+          </span>
+        </div>
+
+        <!-- 窗口内容区：人机对比 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/5">
+          <!-- 左侧：人类使用的桌面卡片 -->
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-semibold text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="layout-grid" class="size-3.5 text-brand-400"></i>
+                桌面端 GUI（Linear 极简风）
+              </span>
+              <span class="text-[11px] text-neutral-500 font-mono">SQLite WAL 共享</span>
+            </div>
+
+            <div class="space-y-3">
+              <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-brand-500/40 transition cursor-pointer flex items-center justify-between group">
+                <div class="flex items-center gap-3">
+                  <div class="size-9 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-mono">
+                    <i data-lucide="coffee" class="size-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-semibold text-white group-hover:text-brand-400 transition">系统防锁屏守护</h4>
+                    <p class="text-xs text-neutral-500 font-mono mt-0.5">每 3 分钟自动心跳 · 无感防休眠</p>
+                  </div>
+                </div>
+                <span class="px-2 py-1 rounded text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">运行中</span>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-brand-500/40 transition cursor-pointer flex items-center justify-between group">
+                <div class="flex items-center gap-3">
+                  <div class="size-9 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center font-mono">
+                    <i data-lucide="globe" class="size-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-semibold text-white group-hover:text-brand-400 transition">Antigravity 启用代理环境</h4>
+                    <p class="text-xs text-neutral-500 font-mono mt-0.5">127.0.0.1:7897 · 非 TUN 模式</p>
+                  </div>
+                </div>
+                <span class="px-2 py-1 rounded text-[11px] font-mono bg-white/5 text-neutral-400">空闲</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右侧：AI 调用的 MCP 协议 -->
+          <div class="p-6 bg-black/30 font-mono text-xs text-neutral-300">
+            <div class="flex items-center justify-between mb-4">
+              <span class="font-semibold text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="bot" class="size-3.5 text-purple-400"></i>
+                AI 智能体直接调用 (Claude / Cursor)
+              </span>
+              <span class="text-[11px] text-purple-400">JSON-RPC 2.0</span>
+            </div>
+
+            <div class="space-y-2 bg-[#0d0e11] p-3.5 rounded-xl border border-white/5 overflow-x-auto text-[11.5px] leading-relaxed">
+              <p class="text-neutral-500">// AI 自动调用 MCP execute_script</p>
+              <p><span class="text-purple-400">call_tool</span>("script-launcher", "execute_script", { id: 5 })</p>
+              <div class="pt-2 text-neutral-400 border-t border-white/5 mt-2">
+                <span class="text-emerald-400">✔ status:</span> "success"<br />
+                <span class="text-blue-400">➔ output:</span> "第 1 次防锁屏心跳已触发..."<br />
+                <span class="text-neutral-500">⏱ durationMs:</span> 18ms
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 核心特性 (Features) -->
+  <section id="features" class="relative z-10 py-20 px-6 max-w-6xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <h2 class="text-3xl font-bold tracking-tight text-white mb-4">专为现代开发者打造的核心特性</h2>
+      <p class="text-neutral-400 text-sm">兼具极简直观的桌面体验与 AI 自动化调度的无限潜能。</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="p-6 rounded-2xl card-border">
+        <div class="size-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-5">
+          <i data-lucide="cpu" class="size-5"></i>
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">AI-Native MCP 标准赋能</h3>
+        <p class="text-xs text-neutral-400 leading-relaxed">
+          原生集成 Model Context Protocol (MCP) 服务器，暴露 10 个标准化工具接口，允许大模型在对话中直接查询、创建、修改及执行本地脚本任务。
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl card-border">
+        <div class="size-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mb-5">
+          <i data-lucide="database" class="size-5"></i>
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">SQLite WAL 双模共享</h3>
+        <p class="text-xs text-neutral-400 leading-relaxed">
+          GUI 桌面端与后台 MCP 服务共用同一个 SQLite 数据库，开启 WAL 模式并发保障。GUI 里配置的脚本 AI 立即见，AI 写入的条目 GUI 刷新即用。
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl card-border">
+        <div class="size-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-5">
+          <i data-lucide="zap" class="size-5"></i>
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">全自动多语言解释器路由</h3>
+        <p class="text-xs text-neutral-400 leading-relaxed">
+          根据后缀名自动匹配解释器：Python (<code class="text-neutral-300">.py</code>)、PowerShell (<code class="text-neutral-300">.ps1</code>)、Node.js (<code class="text-neutral-300">.js</code>)、Batch (<code class="text-neutral-300">.bat</code>)、Shell 以及系统 PATH 中的任意 EXE。
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl card-border">
+        <div class="size-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-5">
+          <i data-lucide="sparkles" class="size-5"></i>
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">Linear / Vercel 极简设计</h3>
+        <p class="text-xs text-neutral-400 leading-relaxed">
+          告别老旧丑陋的控制台界面。基于现代前端美学重绘，支持深色/明亮模式、细腻悬浮动效、自适应响应式卡片网格与实时滚动抽屉。
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl card-border">
+        <div class="size-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center mb-5">
+          <i data-lucide="shield-check" class="size-5"></i>
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">受控的执行与安全隔离</h3>
+        <p class="text-xs text-neutral-400 leading-relaxed">
+          相较于赋予大模型不受限的裸 Terminal 权限，通过 ScriptLauncher 可以结构化管理敏感运维脚本，提供清晰的入参校验与安全审计边界。
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl card-border">
+        <div class="size-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-5">
+          <i data-lucide="feather" class="size-5"></i>
+        </div>
+        <h3 class="text-base font-bold text-white mb-2">Go + Wails 独立轻量二进制</h3>
+        <p class="text-xs text-neutral-400 leading-relaxed">
+          基于 Go 语言编译为单一可执行文件，毫秒级冷启动，内存占用仅数十兆，绝不依赖沉重的 Electron 或外部庞大运行时。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCP 接入向导 (MCP Config Section) -->
+  <section id="mcp" class="relative z-10 py-20 px-6 max-w-5xl mx-auto">
+    <div class="p-8 md:p-12 rounded-3xl card-border bg-gradient-to-b from-[#16171b] to-[#0f1013]">
+      <div class="max-w-2xl mb-8">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 text-xs font-mono mb-4">
+          <i data-lucide="cable" class="size-3.5"></i>
+          MCP Integration Guide
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">一键接入你的 AI 客户端</h2>
+        <p class="text-xs md:text-sm text-neutral-400">
+          支持 Claude Desktop、Cursor、Antigravity、QwenWork 等任意支持标准 STDIO MCP 协议的宿主应用。
+        </p>
+      </div>
+
+      <!-- Tab 切换 -->
+      <div class="flex items-center gap-2 border-b border-white/10 pb-3 mb-6 overflow-x-auto text-xs font-mono">
+        <button onclick="setTab('antigravity')" id="tab-antigravity" class="tab-btn px-3 py-1.5 rounded-lg bg-white/10 text-white font-medium">Antigravity</button>
+        <button onclick="setTab('claude')" id="tab-claude" class="tab-btn px-3 py-1.5 rounded-lg text-neutral-400 hover:text-white font-medium">Claude Desktop</button>
+        <button onclick="setTab('cursor')" id="tab-cursor" class="tab-btn px-3 py-1.5 rounded-lg text-neutral-400 hover:text-white font-medium">Cursor</button>
+        <button onclick="setTab('qwen')" id="tab-qwen" class="tab-btn px-3 py-1.5 rounded-lg text-neutral-400 hover:text-white font-medium">QwenWork</button>
+      </div>
+
+      <!-- 代码块与复制 -->
+      <div class="relative rounded-2xl bg-[#090a0c] border border-white/10 p-5 font-mono text-xs">
+        <button onclick="copyCode()" class="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-neutral-300 text-[11px] transition">
+          <i data-lucide="copy" class="size-3.5"></i>
+          <span id="copy-btn-text">复制 JSON</span>
+        </button>
+        <pre class="overflow-x-auto text-neutral-300 pt-2 leading-relaxed" id="code-block"></pre>
+      </div>
+
+      <div class="mt-4 flex items-center gap-2 text-xs text-neutral-500 font-mono" id="config-path-tip">
+        <i data-lucide="info" class="size-3.5"></i>
+        <span>配置文件路径：~/.gemini/config/mcp_config.json</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 下载与安装 (Download) -->
+  <section id="download" class="relative z-10 py-20 px-6 max-w-4xl mx-auto text-center">
+    <div class="p-10 rounded-3xl card-border bg-gradient-to-tr from-brand-900/20 via-[#141519] to-purple-900/10 border-brand-500/20 shadow-2xl">
+      <div class="size-14 rounded-2xl bg-white text-black flex items-center justify-center mx-auto mb-6 shadow-xl">
+        <i data-lucide="download-cloud" class="size-7"></i>
+      </div>
+      <h2 class="text-3xl font-extrabold text-white mb-3">立即下载 ScriptLauncher AI</h2>
+      <p class="text-sm text-neutral-400 max-w-lg mx-auto mb-8">
+        开箱即用，无需安装复杂依赖。下载即享完整的桌面管理面板与本地 MCP 服务。
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+        <a href="https://github.com/1264585648/ScriptLauncher-AI/releases/latest" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-semibold bg-white text-black hover:bg-neutral-200 transition shadow-lg shadow-white/10 text-sm">
+          <i data-lucide="download" class="size-4"></i>
+          <span>下载 Windows (x64) 便携版</span>
+        </a>
+        <a href="https://github.com/1264585648/ScriptLauncher-AI/releases" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold card-border hover:bg-white/5 transition text-sm">
+          <span>查看全部 Release</span>
+        </a>
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-white/5 flex flex-wrap items-center justify-center gap-6 text-xs text-neutral-500 font-mono">
+        <span>系统要求: Windows 10 / 11 64-bit</span>
+        <span>·</span>
+        <span>运行环境: 系统自带 WebView2</span>
+        <span>·</span>
+        <span>协议: MIT License (完全开源)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="relative z-10 border-t border-white/5 py-12 px-6 text-xs text-neutral-500">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <span class="font-bold text-white text-sm">ScriptLauncher AI</span>
+        <span>— 基于 <a href="https://github.com/lemon-codehub/ScriptLauncher" target="_blank" class="underline hover:text-white transition">lemon-codehub/ScriptLauncher</a> (MIT) 二次开发</span>
+      </div>
+      <div class="flex items-center gap-6 font-mono">
+        <a href="https://github.com/1264585648/ScriptLauncher-AI" target="_blank" class="hover:text-white transition">GitHub Repo</a>
+        <a href="https://github.com/1264585648/ScriptLauncher-AI/releases" target="_blank" class="hover:text-white transition">Releases</a>
+        <a href="LICENSE" class="hover:text-white transition">MIT License</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    const configs = {
+      antigravity: {
+        tip: "配置文件：~/.gemini/config/mcp_config.json",
+        code: `{\n  "mcpServers": {\n    "script-launcher": {\n      "command": "D:\\\\app\\\\ScriptLauncher\\\\ScriptLauncher.exe",\n      "args": ["mcp"]\n    }\n  }\n}`
+      },
+      claude: {
+        tip: "配置文件：%APPDATA%\\\\Claude\\\\claude_desktop_config.json",
+        code: `{\n  "mcpServers": {\n    "script-launcher": {\n      "command": "D:\\\\app\\\\ScriptLauncher\\\\ScriptLauncher.exe",\n      "args": ["mcp"]\n    }\n  }\n}`
+      },
+      cursor: {
+        tip: "配置文件：项目级 .cursor/mcp.json 或全局 MCP 设置",
+        code: `{\n  "mcpServers": {\n    "script-launcher": {\n      "command": "D:\\\\app\\\\ScriptLauncher\\\\ScriptLauncher.exe",\n      "args": ["mcp"]\n    }\n  }\n}`
+      },
+      qwen: {
+        tip: "千问办公：设置 → 连接器 → 自定义 MCP → 添加",
+        code: `{\n  "mcpServers": {\n    "script-launcher": {\n      "command": "D:\\\\app\\\\ScriptLauncher\\\\ScriptLauncher.exe",\n      "args": ["mcp"]\n    }\n  }\n}`
+      }
+    };
+
+    let currentTab = 'antigravity';
+
+    function setTab(name) {
+      currentTab = name;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = "tab-btn px-3 py-1.5 rounded-lg text-neutral-400 hover:text-white font-medium";
+      });
+      document.getElementById('tab-' + name).className = "tab-btn px-3 py-1.5 rounded-lg bg-white/10 text-white font-medium";
+      document.getElementById('code-block').innerText = configs[name].code;
+      document.getElementById('config-path-tip').innerHTML = '<i data-lucide="info" class="size-3.5"></i><span>' + configs[name].tip + '</span>';
+      lucide.createIcons();
+    }
+
+    function copyCode() {
+      const code = configs[currentTab].code;
+      navigator.clipboard.writeText(code).then(() => {
+        const text = document.getElementById('copy-btn-text');
+        text.innerText = "已复制 √";
+        setTimeout(() => text.innerText = "复制 JSON", 2000);
+      });
+    }
+
+    setTab('antigravity');
+  </script>
+</body>
+</html>

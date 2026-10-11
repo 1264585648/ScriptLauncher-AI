@@ -15,11 +15,11 @@ function initialPanelHeight() {
 }
 
 function Status({ status }: { status?: 'running' | 'success' | 'failed' | 'stopped' }) {
-  if (status === 'running') return <span className="flex items-center gap-1.5 text-sky-600 dark:text-sky-400"><LoaderCircle className="size-3.5 animate-spin" />运行中</span>
+  if (status === 'running') return <span className="flex items-center gap-1.5 text-[#5e6ad2] dark:text-[#8b93e8]"><LoaderCircle className="size-3.5 animate-spin" />运行中</span>
   if (status === 'success') return <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400"><CheckCircle2 className="size-3.5" />执行成功</span>
   if (status === 'stopped') return <span className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400"><Square className="size-3 fill-current" />已终止</span>
   if (status === 'failed') return <span className="flex items-center gap-1.5 text-red-600 dark:text-red-400"><CircleX className="size-3.5" />执行失败</span>
-  return <span className="text-slate-500 dark:text-slate-500">等待执行</span>
+  return <span className="text-neutral-400 dark:text-neutral-500">等待执行</span>
 }
 
 export function ExecutionLogPanel() {
@@ -86,7 +86,7 @@ export function ExecutionLogPanel() {
   return (
     <section
       className={cn(
-        'relative flex shrink-0 flex-col border-t border-slate-300 bg-[#e7edf4] text-slate-700 dark:border-slate-800 dark:bg-[#0c1321] dark:text-slate-200',
+        'relative flex shrink-0 flex-col border-t border-[#ebebeb] bg-[#fafafa] text-neutral-700 dark:border-[#1f1f1f] dark:bg-[#0f0f0f] dark:text-neutral-200',
         !resizing && 'transition-[height] duration-200',
       )}
       style={{ height: collapsed ? 44 : panelHeight }}
@@ -102,19 +102,19 @@ export function ExecutionLogPanel() {
             document.body.style.cursor = 'row-resize'
           }}
         >
-          <span className="h-1 w-10 rounded-full bg-slate-400/50 opacity-60 transition group-hover:opacity-100 dark:bg-slate-500/70" />
+          <span className="h-1 w-10 rounded-full bg-neutral-300 opacity-70 transition group-hover:bg-[#5e6ad2] group-hover:opacity-100 dark:bg-neutral-600" />
         </div>
       )}
-      <header className="flex h-11 shrink-0 items-center gap-3 border-b border-slate-300 px-4 dark:border-white/[.07]">
-        <div className="flex shrink-0 items-center gap-2 text-xs font-semibold text-slate-800 dark:text-slate-200">
-          <TerminalSquare className="size-4 text-sky-600 dark:text-sky-400" />
+      <header className="flex h-11 shrink-0 items-center gap-3 border-b border-[#ebebeb] px-4 dark:border-[#1f1f1f]">
+        <div className="flex shrink-0 items-center gap-2 text-xs font-semibold text-[#171717] dark:text-neutral-200">
+          <TerminalSquare className="size-4 text-[#5e6ad2] dark:text-[#8b93e8]" />
           执行日志
         </div>
 
         {sessions.length > 0 && (
           <select
             aria-label="选择执行日志"
-            className="h-7 min-w-0 max-w-60 rounded-lg border border-slate-300 bg-white/60 px-2 text-xs text-slate-700 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-white/[.06] dark:text-slate-200"
+            className="h-7 min-w-0 max-w-60 rounded-md border border-[#e5e5e5] bg-white px-2 text-xs text-neutral-700 outline-none transition hover:border-[#d4d4d4] focus:border-[#5e6ad2] dark:border-[#2e2e2e] dark:bg-[#161616] dark:text-neutral-200"
             value={activeSession?.entryId}
             onChange={(event) => selectLog(Number(event.target.value))}
           >
@@ -127,13 +127,13 @@ export function ExecutionLogPanel() {
         <div className="ml-auto flex items-center gap-3 text-[11px]">
           <Status status={activeSession?.status} />
           {activeSession && activeSession.status !== 'running' && (
-            <span className="hidden text-slate-500 sm:inline dark:text-slate-500">
+            <span className="hidden text-neutral-400 sm:inline dark:text-neutral-500">
               退出码 {activeSession.exitCode} · {activeSession.durationMs} ms
             </span>
           )}
           {activeSession?.status === 'running' && (
             <button
-              className="flex h-7 items-center gap-1.5 rounded-md border border-red-300/80 bg-red-50/70 px-2 text-red-600 transition hover:bg-red-100 disabled:cursor-wait disabled:opacity-60 dark:border-red-900/80 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20"
+              className="flex h-7 items-center gap-1.5 rounded-md border border-red-200 bg-white px-2 text-red-600 transition hover:bg-red-50 disabled:cursor-wait disabled:opacity-60 dark:border-red-900/70 dark:bg-transparent dark:text-red-400 dark:hover:bg-red-500/10"
               title="终止当前运行及其子进程"
               disabled={stoppingEntryID === activeSession.entryId}
               onClick={async () => {
@@ -152,7 +152,7 @@ export function ExecutionLogPanel() {
             </button>
           )}
           <button
-            className="grid size-7 place-items-center rounded-md text-slate-500 transition hover:bg-white/60 hover:text-slate-900 disabled:opacity-30 dark:hover:bg-white/10 dark:hover:text-slate-200"
+            className="grid size-7 place-items-center rounded-md text-neutral-400 transition hover:bg-[#f0f0f0] hover:text-[#171717] disabled:opacity-30 dark:hover:bg-[#232323] dark:hover:text-neutral-200"
             title="清空当前日志"
             disabled={!activeSession || (!activeSession.output && !activeSession.error)}
             onClick={clearActiveLog}
@@ -160,7 +160,7 @@ export function ExecutionLogPanel() {
             <Trash2 className="size-3.5" />
           </button>
           <button
-            className="grid size-7 place-items-center rounded-md text-slate-500 transition hover:bg-white/60 hover:text-slate-900 dark:hover:bg-white/10 dark:hover:text-slate-200"
+            className="grid size-7 place-items-center rounded-md text-neutral-400 transition hover:bg-[#f0f0f0] hover:text-[#171717] dark:hover:bg-[#232323] dark:hover:text-neutral-200"
             title={collapsed ? '展开日志' : '收起日志'}
             onClick={toggleLogPanel}
           >
@@ -172,19 +172,19 @@ export function ExecutionLogPanel() {
       {!collapsed && (
         <div ref={outputRef} className="min-h-0 flex-1 overflow-auto px-4 py-3 font-mono text-[12px] leading-5">
           {!activeSession ? (
-            <p className="text-slate-500 dark:text-slate-600">点击入口运行后，stdout 和 stderr 会实时显示在这里。</p>
+            <p className="text-neutral-400 dark:text-neutral-600">点击入口运行后，stdout 和 stderr 会实时显示在这里。</p>
           ) : (
             <>
-              <div className="mb-2 flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-600">
+              <div className="mb-2 flex items-center gap-2 text-[10px] text-neutral-400 dark:text-neutral-600">
                 <span>{activeSession.entryName}</span>
                 {activeSession.startedAt && <span>{new Date(activeSession.startedAt).toLocaleTimeString()}</span>}
               </div>
               {activeSession.output ? (
-                <pre className="whitespace-pre-wrap break-words text-slate-700 dark:text-slate-300">{activeSession.output}</pre>
+                <pre className="whitespace-pre-wrap break-words text-neutral-700 dark:text-neutral-300">{activeSession.output}</pre>
               ) : activeSession.status === 'running' ? (
-                <p className="flex items-center gap-2 text-slate-500"><span className="size-1.5 animate-pulse rounded-full bg-sky-500 dark:bg-sky-400" />等待进程输出…</p>
+                <p className="flex items-center gap-2 text-neutral-400"><span className="size-1.5 animate-pulse rounded-full bg-[#5e6ad2] dark:bg-[#8b93e8]" />等待进程输出…</p>
               ) : (
-                <p className="text-slate-500 dark:text-slate-600">本次执行没有输出。</p>
+                <p className="text-neutral-400 dark:text-neutral-600">本次执行没有输出。</p>
               )}
               {activeSession.error && (
                 <pre className="mt-2 whitespace-pre-wrap break-words text-red-600 dark:text-red-400">{activeSession.error}</pre>

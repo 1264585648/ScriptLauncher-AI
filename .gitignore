@@ -1,5 +1,5 @@
-# Local-only website and deployment configuration (never publish)
-/website/
+# Local-only deployment configuration (never publish)
+
 /scripts/package-and-deploy.sh
 /scripts/deploy-website.sh
 

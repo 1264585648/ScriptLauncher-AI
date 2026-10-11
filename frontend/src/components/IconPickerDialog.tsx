@@ -64,17 +64,17 @@ export function IconPickerDialog({
         description="选择 Lucide 图标、Emoji，或者使用本地图片作为图标。"
       >
         <div className="flex items-center justify-between gap-3">
-          <div className="flex rounded-xl bg-slate-100 p-1 dark:bg-slate-800">
+          <div className="flex rounded-lg bg-[#f2f2f2] p-1 dark:bg-[#1a1a1a]">
             <button
               type="button"
-              className={cn('flex h-9 items-center gap-2 rounded-lg px-4 text-sm transition', mode === 'lucide' ? 'bg-white font-medium text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white' : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200')}
+              className={cn('flex h-9 items-center gap-2 rounded-lg px-4 text-sm transition', mode === 'lucide' ? 'bg-white font-medium text-[#171717] shadow-sm ring-1 ring-[#ebebeb] dark:bg-[#2a2a2a] dark:text-white' : 'text-neutral-500 hover:text-[#171717] dark:text-neutral-400 dark:hover:text-neutral-200')}
               onClick={() => setMode('lucide')}
             >
               <Shapes className="size-4" />Lucide
             </button>
             <button
               type="button"
-              className={cn('flex h-9 items-center gap-2 rounded-lg px-4 text-sm transition', mode === 'emoji' ? 'bg-white font-medium text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white' : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200')}
+              className={cn('flex h-9 items-center gap-2 rounded-lg px-4 text-sm transition', mode === 'emoji' ? 'bg-white font-medium text-[#171717] shadow-sm ring-1 ring-[#ebebeb] dark:bg-[#2a2a2a] dark:text-white' : 'text-neutral-500 hover:text-[#171717] dark:text-neutral-400 dark:hover:text-neutral-200')}
               onClick={() => setMode('emoji')}
             >
               <Smile className="size-4" />Emoji
@@ -88,7 +88,7 @@ export function IconPickerDialog({
         {mode === 'lucide' ? (
           <>
             <div className="relative mt-4">
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-neutral-400" />
               <input
                 className="field-input field-input-with-icon pr-9"
                 value={search}
@@ -97,16 +97,16 @@ export function IconPickerDialog({
                 autoFocus
               />
               {search && (
-                <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200" onClick={() => setSearch('')}>
+                <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-[#171717] dark:hover:text-neutral-200" onClick={() => setSearch('')}>
                   <X className="size-4" />
                 </button>
               )}
             </div>
-            <div className="mt-3 flex items-center justify-between text-xs text-slate-400 dark:text-slate-500">
+            <div className="mt-3 flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500">
               <span>{normalizedSearch ? `找到 ${matchingIcons.length} 个图标` : `常用图标 · 共 ${lucideIconNames.length} 个可搜索`}</span>
               {matchingIcons.length > maxVisibleIcons && <span>当前显示前 {maxVisibleIcons} 个，请继续输入关键词缩小范围</span>}
             </div>
-            <div className="mt-2 max-h-[44vh] overflow-y-auto rounded-xl border border-slate-200 bg-slate-50/60 p-2 dark:border-slate-700 dark:bg-slate-900/30">
+            <div className="mt-2 max-h-[44vh] overflow-y-auto rounded-lg border border-[#ebebeb] bg-[#fafafa] p-2 dark:border-[#262626] dark:bg-[#111111]">
               {visibleIcons.length > 0 ? (
                 <div className="grid grid-cols-6 gap-1.5 sm:grid-cols-8">
                   {visibleIcons.map((name) => (
@@ -115,9 +115,9 @@ export function IconPickerDialog({
                       type="button"
                       title={name}
                       className={cn(
-                        'flex h-[66px] min-w-0 flex-col items-center justify-center gap-1 rounded-lg border text-slate-500 transition hover:border-sky-300 hover:bg-white hover:text-sky-600 dark:text-slate-400 dark:hover:border-sky-700 dark:hover:bg-slate-800 dark:hover:text-sky-400',
+                        'flex h-[66px] min-w-0 flex-col items-center justify-center gap-1 rounded-lg border text-neutral-500 transition hover:border-[#d4d4d4] hover:bg-white hover:text-[#5e6ad2] dark:text-neutral-400 dark:hover:border-[#3a3a3a] dark:hover:bg-[#1a1a1a] dark:hover:text-[#8b93e8]',
                         value === name
-                          ? 'border-sky-500 bg-sky-50 text-sky-600 ring-1 ring-sky-500 dark:bg-sky-500/10 dark:text-sky-400'
+                          ? 'border-[#5e6ad2] bg-[#eef0fb] text-[#5e6ad2] ring-1 ring-[#5e6ad2] dark:bg-[#5e6ad2]/12 dark:text-[#8b93e8] dark:border-[#8b93e8] dark:ring-[#8b93e8]'
                           : 'border-transparent',
                       )}
                       onClick={() => choose(name)}
@@ -128,12 +128,12 @@ export function IconPickerDialog({
                   ))}
                 </div>
               ) : (
-                <div className="grid h-40 place-items-center text-sm text-slate-400 dark:text-slate-500">没有匹配的图标</div>
+                <div className="grid h-40 place-items-center text-sm text-neutral-400 dark:text-neutral-500">没有匹配的图标</div>
               )}
             </div>
           </>
         ) : (
-          <div className="emoji-picker-shell mt-4 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
+          <div className="emoji-picker-shell mt-4 overflow-hidden rounded-lg border border-[#ebebeb] dark:border-[#262626]">
             <EmojiPicker
               emojiData={zhEmojiData}
               emojiStyle={EmojiStyle.NATIVE}
@@ -151,7 +151,7 @@ export function IconPickerDialog({
         )}
 
         {isCustomEntryIcon(value) && (
-          <div className="mt-3 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+          <div className="mt-3 flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
             <EntryIcon name={value} className="size-7 rounded-lg" />当前正在使用自定义图片
           </div>
         )}

@@ -12,7 +12,7 @@ func launchInTerminal(command *exec.Cmd) error {
 	if command.Dir != "" {
 		line = `cd /d "` + strings.ReplaceAll(command.Dir, `"`, `""`) + `" && ` + line
 	}
-	return exec.Command("cmd", "/C", "start", "", "cmd", "/K", line).Run()
+	return exec.Command("cmd", "/S", "/C", `start "" cmd /K "`+line+`"`).Run()
 }
 
 func windowsCommandLine(args []string) string {

@@ -89,7 +89,7 @@ function LauncherPage() {
   const canCreateEntry = groups.length > 0
 
   return (
-    <div className="flex h-screen min-h-[560px] overflow-hidden bg-[#dce4ee] text-slate-900 transition-colors duration-200 dark:bg-[#111827] dark:text-slate-100">
+    <div className="flex h-screen min-h-[560px] overflow-hidden bg-white text-[#171717] transition-colors duration-200 dark:bg-[#0a0a0a] dark:text-neutral-100">
       <Sidebar
         selectedGroupID={selectedGroupID}
         onSelect={setSelectedGroupID}
@@ -99,18 +99,18 @@ function LauncherPage() {
       />
 
       <main className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-[78px] shrink-0 items-end border-b border-slate-300/80 bg-[#e7edf4]/95 px-8 pb-4 pt-3 backdrop-blur transition-colors dark:border-slate-700/70 dark:bg-[#151e2e]/95">
+        <header className="flex h-[78px] shrink-0 items-end border-b border-[#ebebeb] bg-white px-8 pb-4 pt-3 transition-colors dark:border-[#1f1f1f] dark:bg-[#0f0f0f]">
           <div>
             <h1 className="text-xl font-semibold tracking-tight">{pageTitle}</h1>
-            <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{filteredEntries.length} 个入口</p>
+            <p className="mt-0.5 text-xs text-neutral-400 dark:text-neutral-500">{filteredEntries.length} 个入口</p>
           </div>
           <div className="ml-auto flex items-center gap-3">
             {selectedGroupID === null && (
               <div className="relative">
-                <ArrowDownWideNarrow className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+                <ArrowDownWideNarrow className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
                 <select
                   aria-label="全部入口排序"
-                  className="h-10 w-36 appearance-none rounded-xl border border-slate-300 bg-[#f2f5f8]/80 pl-9 pr-7 text-sm text-slate-600 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-500/10 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-300"
+                  className="h-9 w-36 appearance-none rounded-lg border border-[#e5e5e5] bg-white pl-9 pr-7 text-sm text-neutral-600 outline-none transition hover:border-[#d4d4d4] focus:border-[#5e6ad2] focus:ring-2 focus:ring-[#5e6ad2]/12 dark:border-[#2e2e2e] dark:bg-[#161616] dark:text-neutral-300"
                   value={allEntrySort}
                   onChange={(event) => {
                     const value = event.target.value === 'frequency' ? 'frequency' : 'default'
@@ -124,14 +124,14 @@ function LauncherPage() {
               </div>
             )}
             <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
               <input
-                className="h-10 w-[clamp(160px,22vw,256px)] rounded-xl border border-slate-300 bg-[#f2f5f8]/80 pl-9 pr-9 text-sm outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:bg-[#f6f8fa] focus:ring-2 focus:ring-sky-500/10 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-sky-500 dark:focus:bg-slate-800"
+                className="h-9 w-[clamp(160px,22vw,256px)] rounded-lg border border-[#e5e5e5] bg-white pl-9 pr-9 text-sm outline-none transition placeholder:text-neutral-400 hover:border-[#d4d4d4] focus:border-[#5e6ad2] focus:ring-2 focus:ring-[#5e6ad2]/12 dark:border-[#2e2e2e] dark:bg-[#161616] dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-[#8b93e8]"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="搜索名称、路径或参数"
               />
-              {search && <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-200"><X className="size-4" /></button>}
+              {search && <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-[#171717] dark:text-neutral-500 dark:hover:text-neutral-200"><X className="size-4" /></button>}
             </div>
             <Button disabled={!canCreateEntry} onClick={() => setEntryDialog({ open: true })}><Plus className="size-4" />新增入口</Button>
           </div>
@@ -139,10 +139,10 @@ function LauncherPage() {
 
         <div className="min-h-0 flex-1 overflow-y-auto px-8 py-7">
           {loading ? (
-            <div className="grid h-full place-items-center text-sm text-slate-400 dark:text-slate-500"><span className="flex items-center gap-2"><LoaderCircle className="size-4 animate-spin" />正在加载本地数据…</span></div>
+            <div className="grid h-full place-items-center text-sm text-neutral-400 dark:text-neutral-500"><span className="flex items-center gap-2"><LoaderCircle className="size-4 animate-spin" />正在加载本地数据…</span></div>
           ) : loadError ? (
             <div className="grid h-full place-items-center">
-              <div className="text-center"><AlertCircle className="mx-auto size-8 text-red-400" /><p className="mt-3 text-sm text-slate-600 dark:text-slate-400">{loadError}</p><Button className="mt-4" variant="secondary" onClick={load}>重新加载</Button></div>
+              <div className="text-center"><AlertCircle className="mx-auto size-8 text-red-400" /><p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">{loadError}</p><Button className="mt-4" variant="secondary" onClick={load}>重新加载</Button></div>
             </div>
           ) : groups.length === 0 ? (
             <EmptyState icon="folder" title="先创建一个分组" description="分组用于整理脚本、程序和常用命令。" action="新增分组" onAction={() => setGroupDialog({ open: true })} />
@@ -157,8 +157,8 @@ function LauncherPage() {
           ) : selectedGroupID === null && allEntrySort === 'frequency' ? (
             <section>
               <div className="mb-3 flex items-center">
-                <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300">按使用频率</h2>
-                <span className="ml-2 rounded-full bg-slate-200/70 px-2 py-0.5 text-[10px] font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400">{frequencySortedEntries.length}</span>
+                <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">按使用频率</h2>
+                <span className="ml-2 rounded-full bg-[#f2f2f2] px-2 py-0.5 text-[10px] font-medium text-neutral-500 dark:bg-[#1f1f1f] dark:text-neutral-400">{frequencySortedEntries.length}</span>
               </div>
               <EntryGrid entries={frequencySortedEntries} groups={groups} sortable={false} showGroupOnHover onEdit={(entry) => setEntryDialog({ open: true, entry })} onDelete={(entry) => setDeleteTarget({ type: 'entry', value: entry })} />
             </section>
@@ -172,9 +172,9 @@ function LauncherPage() {
                 return (
                   <section key={group.id}>
                     <div className="mb-3 flex items-center">
-                      <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300">{group.name}</h2>
-                      <span className="ml-2 rounded-full bg-slate-200/70 px-2 py-0.5 text-[10px] font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400">{groupEntries.length}</span>
-                      <button className="ml-auto text-xs font-medium text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300" onClick={() => setSelectedGroupID(group.id)}>查看分组</button>
+                      <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">{group.name}</h2>
+                      <span className="ml-2 rounded-full bg-[#f2f2f2] px-2 py-0.5 text-[10px] font-medium text-neutral-500 dark:bg-[#1f1f1f] dark:text-neutral-400">{groupEntries.length}</span>
+                      <button className="ml-auto text-xs font-medium text-[#5e6ad2] hover:text-[#4f5ac4] dark:text-[#8b93e8] dark:hover:text-[#a3aaef]" onClick={() => setSelectedGroupID(group.id)}>查看分组</button>
                     </div>
                     <EntryGrid entries={groupEntries} groups={groups} onEdit={(entry) => setEntryDialog({ open: true, entry })} onDelete={(entry) => setDeleteTarget({ type: 'entry', value: entry })} />
                   </section>
@@ -202,7 +202,7 @@ function LauncherPage() {
       />
 
       {notice && (
-        <div className={cn('fixed right-6 top-5 z-[70] flex max-w-sm items-center gap-2 rounded-xl border bg-white px-4 py-3 text-sm shadow-xl animate-toast-in dark:bg-slate-800', notice.tone === 'success' ? 'border-emerald-200 text-emerald-700 dark:border-emerald-800 dark:text-emerald-300' : 'border-red-200 text-red-700 dark:border-red-800 dark:text-red-300')}>
+        <div className={cn('fixed right-6 top-5 z-[70] flex max-w-sm items-center gap-2 rounded-lg border bg-white px-4 py-3 text-sm shadow-[0_12px_40px_rgba(0,0,0,.14)] animate-toast-in dark:bg-[#1a1a1a]', notice.tone === 'success' ? 'border-emerald-200 text-emerald-700 dark:border-emerald-800 dark:text-emerald-300' : 'border-red-200 text-red-700 dark:border-red-800 dark:text-red-300')}>
           {notice.tone === 'success' ? <CheckCircle2 className="size-4" /> : <AlertCircle className="size-4" />}
           <span className="line-clamp-2">{notice.message}</span>
         </div>
@@ -227,11 +227,11 @@ function EmptyState({
   return (
     <div className="grid h-full min-h-80 place-items-center">
       <div className="max-w-sm text-center">
-        <span className="mx-auto grid size-16 place-items-center rounded-2xl bg-[#edf2f7] text-slate-400 shadow-sm ring-1 ring-slate-300 dark:bg-slate-800 dark:text-slate-500 dark:ring-slate-700">
+        <span className="mx-auto grid size-16 place-items-center rounded-xl bg-[#f5f5f5] text-neutral-400 ring-1 ring-[#ebebeb] dark:bg-[#1a1a1a] dark:text-neutral-500 dark:ring-[#262626]">
           {icon === 'folder' ? <Command className="size-7" /> : <TerminalSquare className="size-7" />}
         </span>
         <h2 className="mt-5 text-base font-semibold">{title}</h2>
-        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{description}</p>
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">{description}</p>
         <Button className="mt-5" variant="secondary" onClick={onAction}><Plus className="size-4" />{action}</Button>
       </div>
     </div>

@@ -70,17 +70,17 @@ export function GroupDialog({
             <span className="field-label mt-5">分组图标</span>
             <button
               type="button"
-              className="flex h-14 w-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50/70 px-3 text-left transition hover:border-sky-300 hover:bg-sky-50/50 dark:border-slate-700 dark:bg-slate-800/70 dark:hover:border-sky-700 dark:hover:bg-sky-500/[.06]"
+              className="flex h-14 w-full items-center gap-3 rounded-lg border border-[#e5e5e5] bg-[#fafafa] px-3 text-left transition hover:border-[#5e6ad2]/50 hover:bg-[#eef0fb]/50 dark:border-[#2e2e2e] dark:bg-[#161616] dark:hover:border-[#8b93e8]/50 dark:hover:bg-[#5e6ad2]/10"
               onClick={() => setIconPickerOpen(true)}
             >
-              <span className="grid size-9 shrink-0 place-items-center overflow-hidden rounded-lg bg-white text-slate-600 shadow-sm dark:bg-slate-900 dark:text-slate-300">
+              <span className="grid size-9 shrink-0 place-items-center overflow-hidden rounded-lg bg-white text-neutral-600 ring-1 ring-[#ebebeb] dark:bg-[#0f0f0f] dark:text-neutral-300 dark:ring-[#262626]">
                 <EntryIcon name={icon} className={isCustomEntryIcon(icon) ? 'size-full' : isEmojiEntryIcon(icon) ? 'size-7 text-2xl' : 'size-5'} />
               </span>
               <span>
-                <span className="block text-sm font-medium text-slate-800 dark:text-slate-200">{iconDisplayName(icon)}</span>
-                <span className="mt-0.5 block text-xs text-slate-400 dark:text-slate-500">点击搜索和选择图标</span>
+                <span className="block text-sm font-medium text-[#171717] dark:text-neutral-200">{iconDisplayName(icon)}</span>
+                <span className="mt-0.5 block text-xs text-neutral-400 dark:text-neutral-500">点击搜索和选择图标</span>
               </span>
-              <ChevronRight className="ml-auto size-4 text-slate-400" />
+              <ChevronRight className="ml-auto size-4 text-neutral-400" />
             </button>
 
             {error && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>}

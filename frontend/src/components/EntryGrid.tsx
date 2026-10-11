@@ -24,7 +24,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 
 function StatusBadge({ state }: { state?: RunState }) {
   if (!state) return <span className="entry-play"><Play className="size-3.5 fill-current" /></span>
-  if (state.status === 'running') return <span className="status-badge bg-sky-50 text-sky-600 dark:bg-sky-500/10 dark:text-sky-400"><LoaderCircle className="size-3.5 animate-spin" />运行中</span>
+  if (state.status === 'running') return <span className="status-badge bg-[#eef0fb] text-[#5e6ad2] dark:bg-[#5e6ad2]/15 dark:text-[#8b93e8]"><LoaderCircle className="size-3.5 animate-spin" />运行中</span>
   if (state.status === 'success') return <span className="status-badge bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"><Check className="size-3.5" />成功</span>
   if (state.status === 'stopped') return <span className="status-badge bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400"><Square className="size-3 fill-current" />已终止</span>
   return <span className="status-badge bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400"><CircleX className="size-3.5" />失败</span>
@@ -59,21 +59,21 @@ function SortableEntryCard({
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
       className={cn(
-        'group/card relative min-h-[148px] cursor-pointer rounded-2xl border bg-[#edf2f7] p-4 shadow-[0_1px_2px_rgba(15,23,42,.05)] transition hover:-translate-y-0.5 hover:border-slate-400 hover:bg-[#f3f6f9] hover:shadow-[0_12px_32px_rgba(15,23,42,.10)] dark:bg-[#182235] dark:shadow-[0_1px_2px_rgba(0,0,0,.18)] dark:hover:border-slate-600 dark:hover:bg-[#1b2940] dark:hover:shadow-[0_14px_34px_rgba(0,0,0,.22)]',
-        failed ? 'border-red-200 dark:border-red-900/80' : 'border-slate-200/80 dark:border-slate-700/80',
+        'group/card relative min-h-[148px] cursor-pointer rounded-xl border bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,.04)] transition duration-150 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(0,0,0,.07)] dark:bg-[#161616] dark:shadow-[0_1px_2px_rgba(0,0,0,.3)] dark:hover:shadow-[0_10px_28px_rgba(0,0,0,.4)]',
+        failed ? 'border-red-200 hover:border-red-300 dark:border-red-900/70 dark:hover:border-red-800' : 'border-[#ebebeb] hover:border-[#d4d4d4] dark:border-[#262626] dark:hover:border-[#3a3a3a]',
         isDragging && 'z-20 opacity-50 shadow-2xl',
       )}
       onClick={() => runState?.status !== 'running' && execute(entry.id)}
     >
       {showGroupOnHover && (
-        <span className="pointer-events-none absolute left-1/2 top-0 z-30 inline-flex max-w-[calc(100%-24px)] -translate-x-1/2 -translate-y-[calc(100%+8px)] items-center gap-1.5 rounded-lg bg-slate-900 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition duration-150 group-hover/card:opacity-100 dark:bg-slate-100 dark:text-slate-900">
+        <span className="pointer-events-none absolute left-1/2 top-0 z-30 inline-flex max-w-[calc(100%-24px)] -translate-x-1/2 -translate-y-[calc(100%+8px)] items-center gap-1.5 rounded-lg bg-[#171717] px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition duration-150 group-hover/card:opacity-100 dark:bg-neutral-100 dark:text-[#171717]">
           <EntryIcon name={group?.icon || 'Folder'} className={isEmojiEntryIcon(group?.icon || '') ? 'size-4 shrink-0 text-sm' : 'size-3.5 shrink-0 rounded-sm'} />
           <span className="truncate">所属分组：{groupName}</span>
-          <span className="absolute left-1/2 top-full -translate-x-1/2 border-[5px] border-transparent border-t-slate-900 dark:border-t-slate-100" />
+          <span className="absolute left-1/2 top-full -translate-x-1/2 border-[5px] border-transparent border-t-[#171717] dark:border-t-neutral-100" />
         </span>
       )}
       <div className="flex items-start justify-between">
-        <span className="grid size-11 place-items-center overflow-hidden rounded-[14px] bg-slate-100 text-slate-700 transition group-hover/card:bg-sky-50 group-hover/card:text-sky-600 dark:bg-slate-800 dark:text-slate-300 dark:group-hover/card:bg-sky-500/10 dark:group-hover/card:text-sky-400">
+        <span className="grid size-11 place-items-center overflow-hidden rounded-xl bg-[#f5f5f5] text-neutral-600 transition group-hover/card:bg-[#eef0fb] group-hover/card:text-[#5e6ad2] dark:bg-[#212121] dark:text-neutral-300 dark:group-hover/card:bg-[#5e6ad2]/15 dark:group-hover/card:text-[#8b93e8]">
           <EntryIcon name={entry.icon} className={isCustomEntryIcon(entry.icon) ? 'size-full' : isEmojiEntryIcon(entry.icon) ? 'size-7 text-2xl' : 'size-5'} />
         </span>
         <div className="flex items-center">
@@ -81,7 +81,7 @@ function SortableEntryCard({
             <button
               {...attributes}
               {...listeners}
-              className="grid size-8 cursor-grab touch-none place-items-center rounded-lg text-slate-300 opacity-0 transition hover:bg-slate-100 hover:text-slate-600 group-hover/card:opacity-100 dark:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
+              className="grid size-8 cursor-grab touch-none place-items-center rounded-lg text-neutral-300 opacity-0 transition hover:bg-[#f5f5f5] hover:text-neutral-500 group-hover/card:opacity-100 dark:text-neutral-600 dark:hover:bg-[#232323] dark:hover:text-neutral-300"
               onClick={(event) => event.stopPropagation()}
             >
               <GripVertical className="size-4" />
@@ -89,7 +89,7 @@ function SortableEntryCard({
           )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="grid size-8 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-200" onClick={(event) => event.stopPropagation()}>
+              <button className="grid size-8 place-items-center rounded-lg text-neutral-400 transition hover:bg-[#f5f5f5] hover:text-[#171717] dark:text-neutral-500 dark:hover:bg-[#232323] dark:hover:text-neutral-200" onClick={(event) => event.stopPropagation()}>
                 <MoreHorizontal className="size-4" />
               </button>
             </DropdownMenuTrigger>
@@ -113,14 +113,14 @@ function SortableEntryCard({
           </DropdownMenu>
         </div>
       </div>
-      <h3 className="mt-5 truncate text-[15px] font-semibold text-slate-900 dark:text-slate-100">{entry.name}</h3>
+      <h3 className="mt-5 truncate text-[15px] font-semibold text-[#171717] dark:text-neutral-50">{entry.name}</h3>
       <div className="mt-5 flex items-center justify-between">
         <StatusBadge state={runState} />
         <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1 text-[10px] tabular-nums text-slate-400 dark:text-slate-500" title={`累计点击 ${entry.clickCount} 次`}>
+          <span className="flex items-center gap-1 text-[10px] tabular-nums text-neutral-400 dark:text-neutral-500" title={`累计点击 ${entry.clickCount} 次`}>
             <MousePointerClick className="size-3" />{entry.clickCount}
           </span>
-          <ChevronRight className="size-4 text-slate-300 transition group-hover/card:translate-x-0.5 group-hover/card:text-sky-500 dark:text-slate-600 dark:group-hover/card:text-sky-400" />
+          <ChevronRight className="size-4 text-neutral-300 transition group-hover/card:translate-x-0.5 group-hover/card:text-[#5e6ad2] dark:text-neutral-600 dark:group-hover/card:text-[#8b93e8]" />
         </div>
       </div>
     </article>

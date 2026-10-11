@@ -123,17 +123,17 @@ export function EntryDialog({
             <span className="field-label">图标</span>
             <button
               type="button"
-              className="flex h-14 w-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50/70 px-3 text-left transition hover:border-sky-300 hover:bg-sky-50/50 dark:border-slate-700 dark:bg-slate-800/70 dark:hover:border-sky-700 dark:hover:bg-sky-500/[.06]"
+              className="flex h-14 w-full items-center gap-3 rounded-lg border border-[#e5e5e5] bg-[#fafafa] px-3 text-left transition hover:border-[#5e6ad2]/50 hover:bg-[#eef0fb]/50 dark:border-[#2e2e2e] dark:bg-[#161616] dark:hover:border-[#8b93e8]/50 dark:hover:bg-[#5e6ad2]/10"
               onClick={() => setIconPickerOpen(true)}
             >
-              <span className="grid size-9 shrink-0 place-items-center overflow-hidden rounded-lg bg-white text-slate-600 shadow-sm dark:bg-slate-900 dark:text-slate-300">
+              <span className="grid size-9 shrink-0 place-items-center overflow-hidden rounded-lg bg-white text-neutral-600 ring-1 ring-[#ebebeb] dark:bg-[#0f0f0f] dark:text-neutral-300 dark:ring-[#262626]">
                 <EntryIcon name={form.icon} className={isCustomEntryIcon(form.icon) ? 'size-full' : isEmojiEntryIcon(form.icon) ? 'size-7 text-2xl' : 'size-5'} />
               </span>
               <span>
-                <span className="block text-sm font-medium text-slate-800 dark:text-slate-200">{iconDisplayName(form.icon)}</span>
-                <span className="mt-0.5 block text-xs text-slate-400 dark:text-slate-500">点击搜索和选择图标</span>
+                <span className="block text-sm font-medium text-[#171717] dark:text-neutral-200">{iconDisplayName(form.icon)}</span>
+                <span className="mt-0.5 block text-xs text-neutral-400 dark:text-neutral-500">点击搜索和选择图标</span>
               </span>
-              <ChevronRight className="ml-auto size-4 text-slate-400" />
+              <ChevronRight className="ml-auto size-4 text-neutral-400" />
             </button>
           </div>
 
@@ -141,7 +141,7 @@ export function EntryDialog({
             <label className="field-label" htmlFor="script-path">脚本路径或命令</label>
             <div className="flex gap-2">
               <div className="relative min-w-0 flex-1">
-                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-neutral-400" />
                 <input id="script-path" className="field-input field-input-with-icon font-mono text-xs" value={form.scriptPath} onChange={(event) => update('scriptPath', event.target.value)} placeholder="/path/to/script.sh 或 docker" />
               </div>
               <Button type="button" variant="secondary" onClick={pickScript}><FolderOpen className="size-4" />选择</Button>
@@ -149,7 +149,7 @@ export function EntryDialog({
           </div>
 
           <div>
-            <label className="field-label" htmlFor="working-directory">工作目录 <span className="font-normal text-slate-400 dark:text-slate-500">（可选）</span></label>
+            <label className="field-label" htmlFor="working-directory">工作目录 <span className="font-normal text-neutral-400 dark:text-neutral-500">（可选）</span></label>
             <div className="flex gap-2">
               <input id="working-directory" className="field-input min-w-0 flex-1 font-mono text-xs" value={form.workingDirectory} onChange={(event) => update('workingDirectory', event.target.value)} placeholder="默认使用脚本所在目录" />
               <Button type="button" variant="secondary" onClick={pickDirectory}><FolderOpen className="size-4" />选择</Button>
@@ -157,14 +157,14 @@ export function EntryDialog({
           </div>
 
           <div>
-            <label className="field-label" htmlFor="arguments">启动参数 <span className="font-normal text-slate-400 dark:text-slate-500">（可选）</span></label>
+            <label className="field-label" htmlFor="arguments">启动参数 <span className="font-normal text-neutral-400 dark:text-neutral-500">（可选）</span></label>
             <input id="arguments" className="field-input font-mono text-xs" value={form.arguments} onChange={(event) => update('arguments', event.target.value)} placeholder='例如：--port 3000 --name "本地服务"' />
           </div>
 
-          <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/70">
+          <div className="flex items-center justify-between rounded-lg border border-[#e5e5e5] bg-[#fafafa] px-4 py-3 dark:border-[#2e2e2e] dark:bg-[#161616]">
             <div>
-              <p className="text-sm font-medium text-slate-800 dark:text-slate-200">在终端中显示</p>
-              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">开启后会调用系统终端并保留脚本输出。</p>
+              <p className="text-sm font-medium text-[#171717] dark:text-neutral-200">在终端中显示</p>
+              <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">开启后会调用系统终端并保留脚本输出。</p>
             </div>
             <Switch checked={form.showTerminal} onCheckedChange={(checked) => update('showTerminal', checked)} />
           </div>
