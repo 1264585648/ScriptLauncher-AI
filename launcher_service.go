@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -508,4 +510,137 @@ func requireAffected(result sql.Result, message string) error {
 		return errors.New(message)
 	}
 	return nil
+}
+
+func iconForExtension(ext string) string {
+	ext = strings.ToLower(ext)
+	switch ext {
+	case ".py":
+		return "Code2"
+	case ".js", ".mjs", ".cjs":
+		return "Braces"
+	case ".ps1", ".sh", ".bash", ".zsh":
+		return "Terminal"
+	case ".bat", ".cmd":
+		return "FileCode2"
+	case ".exe":
+		return "Box"
+	default:
+		return "File"
+	}
+}
+
+func isSupportedScriptFile(ext string) bool {
+	ext = strings.ToLower(ext)
+	switch ext {
+	case ".sh", ".bash", ".zsh", ".py", ".js", ".mjs", ".cjs", ".ps1", ".bat", ".cmd", ".exe":
+		return true
+	default:
+		return false
+	}
+}
+
+func (s *LauncherService) QuickAddScripts(req QuickAddRequest) (QuickAddResult, error) {
+	var result QuickAddResult
+	
+	groupID := req.GroupID
+	if groupID == 0 {
+		var groupIDFromDB int64
+		err := s.db.QueryRow("SELECT id FROM groups WHERE name = ?", "快速添加").Scan(&groupIDFromDB)
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				group, err := s.CreateGroup(GroupInput{
+					Name: "快速添加",
+					Icon: "FolderPlus",
+				})
+				if err != nil {
+					return result, fmt.Errorf("创建快速添加分组失败: %w", err)
+				}
+				groupID = group.ID
+			} else {
+				return result, err
+			}
+		} else {
+			groupID = groupIDFromDB
+		}
+	} else {
+		if err := s.requireGroup(groupID); err != nil {
+			return result, err
+		}
+	}
+
+	for _, path := range req.Paths {
+		info, err := os.Stat(path)
+		if err != nil {
+			result.Errors = append(result.Errors, fmt.Sprintf("无法读取路径: %s, 错误: %v", path, err))
+			continue
+		}
+
+		if info.IsDir() {
+			entries, err := os.ReadDir(path)
+			if err != nil {
+				result.Errors = append(result.Errors, fmt.Sprintf("无法读取目录: %s, 错误: %v", path, err))
+				continue
+			}
+			for _, entry := range entries {
+				if entry.IsDir() {
+					continue
+				}
+				childPath := filepath.Join(path, entry.Name())
+				ext := filepath.Ext(entry.Name())
+				if isSupportedScriptFile(ext) {
+					baseName := strings.TrimSuffix(filepath.Base(childPath), ext)
+					input := EntryInput{
+						GroupID:      groupID,
+						Name:         baseName,
+						Icon:         iconForExtension(ext),
+						ScriptPath:   childPath,
+						ShowTerminal: false,
+					}
+					createdEntry, err := s.CreateEntry(input)
+					if err != nil {
+						result.Errors = append(result.Errors, fmt.Sprintf("添加脚本失败 %s: %v", childPath, err))
+					} else {
+						result.Added = append(result.Added, createdEntry)
+					}
+				} else {
+					result.Skipped = append(result.Skipped, childPath)
+				}
+			}
+		} else {
+			ext := filepath.Ext(info.Name())
+			if isSupportedScriptFile(ext) {
+				baseName := strings.TrimSuffix(filepath.Base(path), ext)
+				input := EntryInput{
+					GroupID:      groupID,
+					Name:         baseName,
+					Icon:         iconForExtension(ext),
+					ScriptPath:   path,
+					ShowTerminal: false,
+				}
+				createdEntry, err := s.CreateEntry(input)
+				if err != nil {
+					result.Errors = append(result.Errors, fmt.Sprintf("添加脚本失败 %s: %v", path, err))
+				} else {
+					result.Added = append(result.Added, createdEntry)
+				}
+			} else {
+				result.Skipped = append(result.Skipped, path)
+			}
+		}
+	}
+
+	return result, nil
+}
+
+func (s *LauncherService) SelectMultipleScripts() ([]string, error) {
+	if s.app == nil {
+		return nil, errors.New("文件选择器尚未就绪")
+	}
+	paths, err := s.app.Dialog.OpenFile().
+		SetTitle("选择脚本文件（可多选）").
+		AddFilter("支持的脚本与程序", "*.sh;*.bash;*.zsh;*.py;*.js;*.mjs;*.cjs;*.ps1;*.bat;*.cmd;*.exe").
+		AddFilter("所有文件", "*.*").
+		PromptForMultipleSelection()
+	return paths, err
 }

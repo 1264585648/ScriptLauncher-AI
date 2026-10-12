@@ -14,5 +14,8 @@ export type {
     ExecutionResult,
     Group,
     GroupInput,
-    Setting
+    Setting,
+    QuickAddRequest,
+    QuickAddResult
 } from "./models.js";
+

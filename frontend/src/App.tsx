@@ -1,9 +1,12 @@
-import { AlertCircle, ArrowDownWideNarrow, CheckCircle2, Command, LoaderCircle, Plus, Search, TerminalSquare, X } from 'lucide-react'
+import { AlertCircle, ArrowDownWideNarrow, CheckCircle2, Command, LoaderCircle, Plus, Search, TerminalSquare, Upload, X } from 'lucide-react'
 import { Events } from '@wailsio/runtime'
 import { useEffect, useMemo, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
+import * as LauncherService from '../bindings/scriptlauncher/launcherservice'
 import type { Entry, ExecutionEvent, Group } from '../bindings/scriptlauncher/models'
 import { ConfirmDialog } from './components/ConfirmDialog'
+import { DropZoneOverlay } from './components/DropZoneOverlay'
+import { QuickAddDialog } from './components/QuickAddDialog'
 import { EntryDialog } from './components/EntryDialog'
 import { EntryGrid } from './components/EntryGrid'
 import { ExecutionLogPanel } from './components/ExecutionLogPanel'
@@ -28,6 +31,11 @@ function LauncherPage() {
 
   const [selectedGroupID, setSelectedGroupID] = useState<number | null>(null)
   const [search, setSearch] = useState('')
+  const [dragOver, setDragOver] = useState(false)
+  const [droppedFiles, setDroppedFiles] = useState<string[]>([])
+  const [quickAddOpen, setQuickAddOpen] = useState(false)
+  const quickAddScripts = useLauncherStore((state) => state.quickAddScripts)
+  
   const [allEntrySort, setAllEntrySort] = useState<'default' | 'frequency'>(() => {
     return window.localStorage.getItem('script-launcher-all-entry-sort') === 'frequency' ? 'frequency' : 'default'
   })
@@ -37,6 +45,16 @@ function LauncherPage() {
 
   useEffect(() => { load() }, [load])
   useEffect(() => watchSystemTheme(), [])
+  useEffect(() => {
+    return Events.On('files:dropped', (event) => {
+        const files = event.data as string[]
+        if (files?.length) {
+            setDroppedFiles(files)
+            setQuickAddOpen(true)
+            setDragOver(false)
+        }
+    })
+  }, [])
   useEffect(
     () => Events.On('execution:log', (event) => handleExecutionEvent(event.data as ExecutionEvent)),
     [handleExecutionEvent],
@@ -89,7 +107,18 @@ function LauncherPage() {
   const canCreateEntry = groups.length > 0
 
   return (
-    <div className="flex h-screen min-h-[560px] overflow-hidden bg-white text-[#171717] transition-colors duration-200 dark:bg-[#0a0a0a] dark:text-neutral-100">
+    <div 
+      className="flex h-screen min-h-[560px] overflow-hidden bg-white text-[#171717] transition-colors duration-200 dark:bg-[#0a0a0a] dark:text-neutral-100 [&.file-drop-target-active_.drop-overlay]:opacity-100"
+      data-file-drop-target="true"
+      onDragEnter={(e) => { e.preventDefault(); setDragOver(true) }}
+      onDragOver={(e) => { e.preventDefault(); setDragOver(true) }}
+      onDragLeave={(e) => {
+          if (e.relatedTarget === null || !e.currentTarget.contains(e.relatedTarget as Node)) {
+              setDragOver(false)
+          }
+      }}
+      onDrop={(e) => { e.preventDefault(); setDragOver(false) }}
+    >
       <Sidebar
         selectedGroupID={selectedGroupID}
         onSelect={setSelectedGroupID}
@@ -133,7 +162,18 @@ function LauncherPage() {
               />
               {search && <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-[#171717] dark:text-neutral-500 dark:hover:text-neutral-200"><X className="size-4" /></button>}
             </div>
-            <Button disabled={!canCreateEntry} onClick={() => setEntryDialog({ open: true })}><Plus className="size-4" />新增入口</Button>
+            <Button variant="secondary" onClick={async () => {
+                try {
+                    const paths = await LauncherService.SelectMultipleScripts()
+                    if (paths?.length) {
+                        setDroppedFiles(paths)
+                        setQuickAddOpen(true)
+                    }
+                } catch {}
+            }}>
+                <Upload className="size-4 mr-2" />批量添加
+            </Button>
+            <Button disabled={!canCreateEntry} onClick={() => setEntryDialog({ open: true })}><Plus className="size-4 mr-2" />新增入口</Button>
           </div>
         </header>
 
@@ -207,6 +247,18 @@ function LauncherPage() {
           <span className="line-clamp-2">{notice.message}</span>
         </div>
       )}
+
+      <DropZoneOverlay visible={dragOver} />
+      <QuickAddDialog
+          open={quickAddOpen}
+          onOpenChange={setQuickAddOpen}
+          filePaths={droppedFiles}
+          onConfirm={async (groupId) => {
+              setQuickAddOpen(false)
+              await quickAddScripts(droppedFiles, groupId)
+              setDroppedFiles([])
+          }}
+      />
     </div>
   )
 }

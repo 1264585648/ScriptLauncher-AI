@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
+	"github.com/wailsapp/wails/v3/pkg/events"
 )
 
 //go:embed all:frontend/dist
@@ -14,6 +15,7 @@ var assets embed.FS
 func init() {
 	application.RegisterEvent[ExecutionEvent]("execution:log")
 	application.RegisterEvent[int64]("execution:open-log")
+	application.RegisterEvent[[]string]("files:dropped")
 }
 
 func main() {
@@ -53,6 +55,7 @@ func main() {
 		Height:    760,
 		MinWidth:  860,
 		MinHeight: 560,
+		EnableFileDrop: true,
 		Mac: application.MacWindow{
 			InvisibleTitleBarHeight: 50,
 			TitleBar:                application.MacTitleBarHiddenInset,
@@ -61,6 +64,13 @@ func main() {
 		URL:              "/",
 	})
 	service.notifications = newExecutionNotifications(app, window)
+
+	window.OnWindowEvent(events.Common.WindowFilesDropped, func(event *application.WindowEvent) {
+		files := event.Context().DroppedFiles()
+		if len(files) > 0 {
+			app.Event.Emit("files:dropped", files)
+		}
+	})
 
 	if err := app.Run(); err != nil {
 		log.Fatal(err)

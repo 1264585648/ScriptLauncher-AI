@@ -75,3 +75,16 @@ type ExecutionEvent struct {
 	Timestamp  string `json:"timestamp"`
 	DurationMS int64  `json:"durationMs"`
 }
+
+// QuickAddRequest is used for drag-and-drop or batch adding scripts.
+type QuickAddRequest struct {
+	Paths   []string `json:"paths"`
+	GroupID int64    `json:"groupId"`
+}
+
+// QuickAddResult contains the result of a batch add operation.
+type QuickAddResult struct {
+	Added   []Entry  `json:"added"`
+	Skipped []string `json:"skipped"`
+	Errors  []string `json:"errors"`
+}

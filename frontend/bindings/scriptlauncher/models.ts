@@ -76,3 +76,15 @@ export interface Setting {
     "key": string;
     "value": string;
 }
+
+export interface QuickAddRequest {
+    "paths": string[];
+    "groupId": number;
+}
+
+export interface QuickAddResult {
+    "added": Entry[] | null;
+    "skipped": string[] | null;
+    "errors": string[] | null;
+}
+

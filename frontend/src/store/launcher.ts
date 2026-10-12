@@ -58,6 +58,7 @@ interface LauncherStore {
   clearActiveLog: () => void
   toggleLogPanel: () => void
   clearNotice: () => void
+  quickAddScripts: (paths: string[], groupId: number) => Promise<void>
 }
 
 const maxRealtimeLogLength = 200 * 1024
@@ -334,4 +335,23 @@ export const useLauncherStore = create<LauncherStore>((set, get) => ({
 
   toggleLogPanel: () => set((state) => ({ logPanelCollapsed: !state.logPanelCollapsed })),
   clearNotice: () => set({ notice: null }),
+  quickAddScripts: async (paths, groupId) => {
+    try {
+      const result = await LauncherService.QuickAddScripts({ paths, groupId })
+      await get().load()
+      const parts: string[] = []
+      if (result.added?.length) parts.push(`已添加 ${result.added.length} 个脚本`)
+      if (result.skipped?.length) parts.push(`跳过 ${result.skipped.length} 个不支持的文件`)
+      if (result.errors?.length) parts.push(`${result.errors.length} 个文件出错`)
+      set({
+        notice: {
+          id: Date.now(),
+          tone: result.errors?.length ? 'error' : 'success',
+          message: parts.join('，') || '没有可添加的脚本文件',
+        },
+      })
+    } catch (error) {
+      set({ notice: { id: Date.now(), tone: 'error', message: errorMessage(error) } })
+    }
+  },
 }))

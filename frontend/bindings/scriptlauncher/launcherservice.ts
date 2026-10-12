@@ -75,3 +75,12 @@ export function UpdateEntry(id: number, input: $models.EntryInput): $Cancellable
 export function UpdateGroup(id: number, input: $models.GroupInput): $CancellablePromise<$models.Group> {
     return $Call.ByID(2010523803, id, input);
 }
+
+export function QuickAddScripts(req: $models.QuickAddRequest): $CancellablePromise<$models.QuickAddResult> {
+    return $Call.ByID(2233712645, req);
+}
+
+export function SelectMultipleScripts(): $CancellablePromise<string[]> {
+    return $Call.ByID(3425761203);
+}
+
