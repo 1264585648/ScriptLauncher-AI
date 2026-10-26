@@ -7,9 +7,20 @@
 <p align="center"><strong>人机共用的现代 AI-Native 桌面脚本启动器与自动化中枢。</strong><br />A lightweight, local-first desktop script launcher with Model Context Protocol (MCP) support & Linear-style UI.</p>
 
 <p align="center">
+  <a href="https://scriptlauncher-ai.pages.dev"><img src="https://img.shields.io/badge/Website-scriptlauncher--ai.pages.dev-5e6ad2?logo=cloudflare" alt="Official Website" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license" /></a>
   <img src="https://img.shields.io/badge/MCP-Ready-8b93e8" alt="MCP Ready" />
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS-lightgrey" alt="Windows and macOS" />
+</p>
+
+<p align="center">
+  <a href="https://scriptlauncher-ai.pages.dev">🌐 官方网站 (Cloudflare Pages)</a> ·
+  <a href="https://github.com/1264585648/ScriptLauncher-AI/releases">📦 下载发行版</a> ·
+  <a href="#-在各-ai-客户端中接入-mcp-config">🔌 MCP 接入指南</a>
+</p>
+
+<p align="center">
+  <img src="docs/images/script-launcher.png" width="900" alt="ScriptLauncher AI 界面预览（测试脚本演示）" />
 </p>
 
 ---
